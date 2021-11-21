@@ -47,9 +47,9 @@
     "@nestjs/core": "*",
     "@nestjs/cqrs": "*",
     "@nestjs/terminus": "*",
-    "nestjs-context": "*",
     "class-transformer": ">=0.4.0",
     "class-validator": ">=0.13.1",
+    "nestjs-context": "github:kodeine/nestjs-context",
     "reflect-metadata": ">=0.1.13",
     "rimraf": ">=3.0.2",
     "rxjs": ">=6.6.3"
@@ -62,10 +62,10 @@
   "dependencies": {
     "@eventstore/db-client": "^2.1.0",
     "lodash": "^4.17.20",
-    "uuid": "^8.3.2",
-    "nestjs-context": "github:kodeine/nestjs-context"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "nestjs-context": "github:kodeine/nestjs-context",
     "@nestjs/common": "8.2.2",
     "@nestjs/core": "8.2.2",
     "@nestjs/platform-express": "8.2.2",
