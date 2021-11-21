@@ -37,11 +37,11 @@
     "nestjs",
     "eventstore"
   ],
-  "repository": "git@github.com:PrestaShopCorp/nestjs-eventstore.git",
+  "repository": "git@github.com:kodeine/nestjs-eventstore.git",
   "publishConfig": {
     "access": "public"
   },
-  "bugs": "https://github.com/prestashopCorp/nestjs-eventstore/issues",
+  "bugs": "https://github.com/kodeine/nestjs-eventstore/issues",
   "peerDependencies": {
     "@nestjs/common": "*",
     "@nestjs/core": "*",
