@@ -61,7 +61,8 @@
   "dependencies": {
     "@eventstore/db-client": "^2.1.0",
     "lodash": "^4.17.20",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "nestjs-context": "github:kodeine/nestjs-context"
   },
   "devDependencies": {
     "@nestjs/common": "8.2.2",
