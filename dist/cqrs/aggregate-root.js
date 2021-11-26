@@ -64,7 +64,7 @@ class AggregateRoot {
         history.forEach((event) => this.apply(event, true));
     }
     async apply(event, isFromHistory = false) {
-        this.logger.debug(`Applying ${event.constructor.name} with${this.autoCommit ? '' : 'out'} autocommit`);
+        this.logger.debug(`Applying ${event.constructor.name} with${!!this.autoCommit ? '' : 'out'} autocommit`);
         if (!isFromHistory) {
             this.addEvent(event);
         }
@@ -73,10 +73,10 @@ class AggregateRoot {
         handler && (await handler.call(this, event));
     }
     getEventHandler(event) {
-        const handler = `on${AggregateRoot.getEventName(event)}`;
+        const handler = `on${this.getEventName(event)}`;
         return this[handler];
     }
-    static getEventName(event) {
+    getEventName(event) {
         const { constructor } = Object.getPrototypeOf(event);
         return constructor.name;
     }

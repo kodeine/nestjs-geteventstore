@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventStoreAggregateRoot = void 0;
 const cqrs_1 = require("../cqrs");
-const constants = require("@eventstore/db-client/dist/constants");
+const enum_1 = require("../enum");
 class EventStoreAggregateRoot extends cqrs_1.AggregateRoot {
     set streamName(streamName) {
         this._streamName = streamName;
@@ -22,13 +22,13 @@ class EventStoreAggregateRoot extends cqrs_1.AggregateRoot {
             $maxCount: maxCount,
         };
     }
-    async commit(expectedRevision = constants.ANY, expectedMetadataRevision = constants.ANY) {
+    async commit(expectedVersion = enum_1.ExpectedVersion.Any, expectedMetadataVersion = enum_1.ExpectedVersion.Any) {
         this.logger.debug(`Aggregate will commit ${this.getUncommittedEvents().length} events in ${this.publishers.length} publishers`);
         const context = {
-            expectedRevision,
+            expectedVersion,
             ...(this._streamName ? { streamName: this._streamName } : {}),
             ...(this._streamMetadata
-                ? { streamMetadata: this._streamMetadata, expectedMetadataRevision }
+                ? { streamMetadata: this._streamMetadata, expectedMetadataVersion }
                 : {}),
         };
         for (const publisher of this.publishers) {

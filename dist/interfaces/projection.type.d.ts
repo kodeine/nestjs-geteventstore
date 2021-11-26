@@ -1,8 +1,9 @@
-export declare type EventStoreProjection = {
+import { ProjectionMode } from 'geteventstore-promise';
+export declare type EventStoreProjectionType = {
     name: string;
     content?: string;
     file?: string;
-    mode?: 'oneTime' | 'continuous' | 'transient';
+    mode?: ProjectionMode;
     trackEmittedStreams?: boolean;
     enabled?: boolean;
     checkPointsEnabled?: boolean;

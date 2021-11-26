@@ -10,7 +10,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./publisher/event-store.publisher"), exports);
-__exportStar(require("./config"), exports);
-__exportStar(require("./services/event-store.service"), exports);
+__exportStar(require("./event-store.publisher"), exports);
+__exportStar(require("./event-store.service"), exports);
+__exportStar(require("./event-store"), exports);
 __exportStar(require("./event-store-aggregate-root"), exports);

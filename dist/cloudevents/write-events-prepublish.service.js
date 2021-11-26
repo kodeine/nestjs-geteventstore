@@ -8,28 +8,61 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WriteEventsPrepublishService = void 0;
 const common_1 = require("@nestjs/common");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const nestjs_context_1 = require("nestjs-context");
-const constants_1 = require("../constants");
 const create_event_default_metadata_1 = require("../tools/create-event-default-metadata");
 const net_1 = require("net");
 let WriteEventsPrepublishService = class WriteEventsPrepublishService {
-    constructor(context, config) {
+    constructor(context) {
         this.context = context;
-        this.config = config;
         this.logger = new common_1.Logger(this.constructor.name);
     }
     async onValidationFail(events, errors) {
-        for (const error of errors) {
-            this.logger.error(error);
+        const errorDetails = this.flattenDetails(errors);
+        this.logger.error(`Validation found ${errors.length} errors: ${JSON.stringify(errorDetails)}`);
+    }
+    getErrorDetails(event, error, parent = null) {
+        const field = parent ? `${parent}.${error.property}` : error.property;
+        const details = [];
+        if (error.constraints) {
+            for (const [issue, description] of Object.entries(error.constraints)) {
+                const errorDetail = {
+                    event,
+                    field,
+                    value: error.value,
+                    issue,
+                    description,
+                };
+                details.push(errorDetail);
+            }
         }
+        else {
+            details.push({
+                field,
+                value: error.value,
+                issue: 'unknown',
+                description: '',
+            });
+        }
+        return details;
+    }
+    flattenDetails(validationErrors, parent = null, event = null) {
+        return validationErrors
+            .map((validationError) => {
+            if (validationError.children.length) {
+                return this.flattenDetails(validationError.children, parent
+                    ? `${parent}.${validationError.property}`
+                    : validationError.property, event || validationError.target.constructor.name);
+            }
+            else {
+                return this.getErrorDetails(event, validationError, parent);
+            }
+        })
+            .flat();
     }
     async validate(events) {
         let errors = [];
@@ -49,7 +82,7 @@ let WriteEventsPrepublishService = class WriteEventsPrepublishService {
                 ? `${hostnameRaw.split(/[.]/).join('-')}.ip`
                 : hostnameRaw;
             const hostnameArr = hostname.split('.');
-            const eventType = `${hostnameArr[1] ? hostnameArr[1] + '.' : ''}${hostnameArr[0]}.${this.config.serviceName ?? this.context.get(nestjs_context_1.CONTEXT_BIN)}.${event.eventType}.${version}`;
+            const eventType = `${hostnameArr[1] ? hostnameArr[1] + '.' : ''}${hostnameArr[0]}.${this.context.get(nestjs_context_1.CONTEXT_BIN)}.${event.eventType}.${version}`;
             const source = `${hostname}${this.context.get(nestjs_context_1.CONTEXT_PATH)}`;
             return {
                 specversion: 1,
@@ -81,7 +114,6 @@ let WriteEventsPrepublishService = class WriteEventsPrepublishService {
 };
 WriteEventsPrepublishService = __decorate([
     (0, common_1.Injectable)(),
-    __param(1, (0, common_1.Inject)(constants_1.WRITE_EVENT_BUS_CONFIG)),
-    __metadata("design:paramtypes", [nestjs_context_1.Context, Object])
+    __metadata("design:paramtypes", [nestjs_context_1.Context])
 ], WriteEventsPrepublishService);
 exports.WriteEventsPrepublishService = WriteEventsPrepublishService;

@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReadEventBus = void 0;
 const cqrs_1 = require("@nestjs/cqrs");
@@ -53,6 +52,8 @@ let ReadEventBus = class ReadEventBus extends cqrs_1.EventBus {
 ReadEventBus = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_2.Inject)(constants_1.READ_EVENT_BUS_CONFIG)),
-    __metadata("design:paramtypes", [Object, event_bus_prepublish_service_1.EventBusPrepublishService, typeof (_a = typeof cqrs_1.CommandBus !== "undefined" && cqrs_1.CommandBus) === "function" ? _a : Object, core_1.ModuleRef])
+    __metadata("design:paramtypes", [Object, event_bus_prepublish_service_1.EventBusPrepublishService,
+        cqrs_1.CommandBus,
+        core_1.ModuleRef])
 ], ReadEventBus);
 exports.ReadEventBus = ReadEventBus;

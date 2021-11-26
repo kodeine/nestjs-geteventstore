@@ -12,6 +12,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./config"), exports);
 __exportStar(require("./events"), exports);
-__exportStar(require("../event-store/subscriptions"), exports);
+__exportStar(require("./streams"), exports);
+__exportStar(require("./subscriptions"), exports);
 __exportStar(require("./projection.type"), exports);
 __exportStar(require("./write-event-bus.interface"), exports);

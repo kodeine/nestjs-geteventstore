@@ -45,7 +45,7 @@ let EventBusPrepublishService = class EventBusPrepublishService {
             return events;
         }
         const provider = await this.getProvider(prepare);
-        return provider
+        return !!provider
             ? provider.prepare(events)
             : prepare(events);
     }

@@ -11,6 +11,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./event-bus-config.type"), exports);
+__exportStar(require("./event-store-module-async-config.interface"), exports);
+__exportStar(require("./event-store-config.interface"), exports);
+__exportStar(require("./event-store-service-config.interface"), exports);
 __exportStar(require("./event-bus-prepublish-config.interface"), exports);
 __exportStar(require("./read-event-bus-config.type"), exports);
 __exportStar(require("./write-event-bus-config.interface"), exports);

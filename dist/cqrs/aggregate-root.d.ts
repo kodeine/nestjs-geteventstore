@@ -19,6 +19,6 @@ export declare abstract class AggregateRoot<EventBase extends IEvent = IEvent> {
     loadFromHistory(history: EventBase[]): void;
     apply<T extends EventBase = EventBase>(event: T, isFromHistory?: boolean): Promise<void>;
     private getEventHandler;
-    private static getEventName;
+    private getEventName;
 }
 export {};
