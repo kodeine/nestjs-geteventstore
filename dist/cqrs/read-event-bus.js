@@ -21,8 +21,8 @@ const constants_1 = require("../constants");
 const core_1 = require("@nestjs/core");
 const event_bus_prepublish_service_1 = require("./event-bus-prepublish.service");
 let ReadEventBus = class ReadEventBus extends cqrs_1.EventBus {
-    constructor(config, prepublish, commandBus, moduleRef) {
-        super(commandBus, moduleRef);
+    constructor(config, prepublish, commandBus, moduleRef, unhandledExceptionBus) {
+        super(commandBus, moduleRef, unhandledExceptionBus);
         this.config = config;
         this.prepublish = prepublish;
         this.logger = new common_1.Logger(this.constructor.name);
@@ -54,6 +54,7 @@ ReadEventBus = __decorate([
     __param(0, (0, common_2.Inject)(constants_1.READ_EVENT_BUS_CONFIG)),
     __metadata("design:paramtypes", [Object, event_bus_prepublish_service_1.EventBusPrepublishService,
         cqrs_1.CommandBus,
-        core_1.ModuleRef])
+        core_1.ModuleRef,
+        cqrs_1.UnhandledExceptionBus])
 ], ReadEventBus);
 exports.ReadEventBus = ReadEventBus;

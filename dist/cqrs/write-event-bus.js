@@ -21,8 +21,8 @@ const core_1 = require("@nestjs/core");
 const event_bus_prepublish_service_1 = require("./event-bus-prepublish.service");
 const invalid_event_exception_1 = require("../exceptions/invalid-event.exception");
 let WriteEventBus = class WriteEventBus extends cqrs_1.EventBus {
-    constructor(eventstore, config, prepublish, commandBus, moduleRef) {
-        super(commandBus, moduleRef);
+    constructor(eventstore, config, prepublish, commandBus, moduleRef, unhandledExceptionBus) {
+        super(commandBus, moduleRef, unhandledExceptionBus);
         this.eventstore = eventstore;
         this.config = config;
         this.prepublish = prepublish;
@@ -54,6 +54,7 @@ WriteEventBus = __decorate([
     __param(1, (0, common_1.Inject)(constants_1.WRITE_EVENT_BUS_CONFIG)),
     __metadata("design:paramtypes", [event_store_1.EventStore, Object, event_bus_prepublish_service_1.EventBusPrepublishService,
         cqrs_1.CommandBus,
-        core_1.ModuleRef])
+        core_1.ModuleRef,
+        cqrs_1.UnhandledExceptionBus])
 ], WriteEventBus);
 exports.WriteEventBus = WriteEventBus;

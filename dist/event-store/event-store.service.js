@@ -101,14 +101,14 @@ let EventStoreService = class EventStoreService {
     }
     async onEvent(subscription, payload) {
         if (this.config.onEvent) {
-            return await this.onEvent(subscription, payload);
+            return this.config.onEvent(subscription, payload);
         }
         if (!this.eventBus) {
             return;
         }
         const { event } = payload;
-        if (!payload.isResolved) {
-            this.logger.warn(`Ignore unresolved event from stream ${payload.originalStreamId}[${event.eventNumber.low}] with ID ${payload.originalEvent.eventId}`);
+        if (!event) {
+            this.logger.warn(`Received empty event that could not be resolved!`);
             if (!subscription._autoAck && subscription.hasOwnProperty('_autoAck')) {
                 await subscription.acknowledge([payload]);
             }

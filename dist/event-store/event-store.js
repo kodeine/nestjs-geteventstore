@@ -41,7 +41,20 @@ class EventStore {
         this.connection.on('closed', () => {
             this.isConnected = false;
             this.logger.error('Connection to EventStore closed!');
-            this.config.onTcpDisconnected(this);
+            typeof this.config.onTcpDisconnected === 'function' &&
+                this.config.onTcpDisconnected(this);
+        });
+        this.connection.on('disconnected', () => {
+            this.isConnected = false;
+            this.logger.error('EventStore disconnected!');
+            typeof this.config.onTcpDisconnected === 'function' &&
+                this.config.onTcpDisconnected(this);
+        });
+        this.connection.on('error', (err) => {
+            this.isConnected = false;
+            this.logger.error(`EventStore errored: ${err.message}!`);
+            typeof this.config.onTcpErrored === 'function' &&
+                this.config.onTcpErrored(this, err);
         });
     }
     writeEvents(stream, events, expectedVersion = enum_1.ExpectedVersion.Any) {
@@ -90,7 +103,8 @@ class EventStore {
             return await this.connection
                 .connectToPersistentSubscription(stream, group, onEvent, (subscription, reason, error) => {
                 this.logger.warn(`Connected to persistent subscription ${group} on stream ${stream} dropped ${reason} : ${error}`);
-                this.persistentSubscriptions[`${stream}-${group}`].isConnected = false;
+                this.persistentSubscriptions[`${stream}-${group}`].isConnected =
+                    false;
                 this.persistentSubscriptions[`${stream}-${group}`].status =
                     reason + ' ' + error;
                 if (onSubscriptionDropped) {

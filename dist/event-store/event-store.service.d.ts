@@ -16,5 +16,5 @@ export declare class EventStoreService implements OnModuleDestroy, OnModuleInit 
     subscribeToCatchUpSubscriptions(subscriptions: ICatchupSubscriptionConfig[]): Promise<void>;
     subscribeToVolatileSubscriptions(subscriptions: IVolatileSubscriptionConfig[]): Promise<void>;
     subscribeToPersistentSubscriptions(subscriptions: IPersistentSubscriptionConfig[]): Promise<void>;
-    onEvent(subscription: any, payload: any): any;
+    onEvent(subscription: any, payload: any): Promise<void>;
 }

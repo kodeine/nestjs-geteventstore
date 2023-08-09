@@ -1,4 +1,4 @@
-import { CommandBus, EventBus as Parent } from '@nestjs/cqrs';
+import { CommandBus, EventBus as Parent, UnhandledExceptionBus } from '@nestjs/cqrs';
 import { Injectable, Logger } from '@nestjs/common';
 import {
   ReadEventOptionsType,
@@ -22,8 +22,9 @@ export class ReadEventBus<
     private readonly prepublish: EventBusPrepublishService<EventBase>,
     commandBus: CommandBus,
     moduleRef: ModuleRef,
+    unhandledExceptionBus: UnhandledExceptionBus
   ) {
-    super(commandBus, moduleRef);
+    super(commandBus, moduleRef, unhandledExceptionBus);
     this.logger.debug('Registering Read EventBus for EventStore...');
   }
   async publish<T extends EventBase = EventBase>(event: T) {
