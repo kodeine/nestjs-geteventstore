@@ -31,11 +31,5 @@ class AbstractEventBus extends cqrs_1.EventBus {
             .subscribe();
         this.subscriptions.push(subscription);
     }
-    mapToUnhandledErrorInfo(eventOrCommand, exception) {
-        return {
-            cause: eventOrCommand,
-            exception,
-        };
-    }
 }
 exports.AbstractEventBus = AbstractEventBus;

@@ -86,13 +86,13 @@ export class AbstractEventBus<
     this.subscriptions.push(subscription);
   }
 
-  private mapToUnhandledErrorInfo(
-    eventOrCommand: IEvent | ICommand,
-    exception: unknown,
-  ): UnhandledExceptionInfo {
-    return {
-      cause: eventOrCommand,
-      exception,
-    };
-  }
+  // private mapToUnhandledErrorInfo(
+  //   eventOrCommand: IEvent | ICommand,
+  //   exception: unknown,
+  // ): UnhandledExceptionInfo {
+  //   return {
+  //     cause: eventOrCommand,
+  //     exception,
+  //   };
+  // }
 }
