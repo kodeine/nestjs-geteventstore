@@ -8,5 +8,5 @@ export declare class AbstractEventBus<EventBase> extends EventBus<EventBase> {
     constructor(commandBus: CommandBus, moduleRef: ModuleRef, unhandledExceptionBus: UnhandledExceptionBus);
     bind(handler: IEventHandler<EventBase>, id: string): void;
     protected registerSaga(saga: ISaga<EventBase>): void;
-    private mapToUnhandledErrorInfo;
+    private _mapToUnhandledErrorInfo;
 }

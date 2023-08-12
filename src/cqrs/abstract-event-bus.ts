@@ -67,7 +67,7 @@ export class AbstractEventBus<
         mergeMap((command) =>
           defer(() => this.cmdBus.execute(command)).pipe(
             catchError((error) => {
-              const unhandledError = this.mapToUnhandledErrorInfo(
+              const unhandledError = this._mapToUnhandledErrorInfo(
                 command,
                 error,
               );
@@ -87,7 +87,7 @@ export class AbstractEventBus<
     this.subscriptions.push(subscription);
   }
 
-  private mapToUnhandledErrorInfo(
+  private _mapToUnhandledErrorInfo(
     eventOrCommand: IEvent | ICommand,
     exception: unknown,
   ): UnhandledExceptionInfo {
