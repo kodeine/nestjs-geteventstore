@@ -33,15 +33,22 @@ export class AbstractEventBus<
   bind(handler: IEventHandler<EventBase>, id: string) {
     const stream$ = id ? this.ofEventId(id) : this.subject$;
     const subscription = stream$
-      .pipe(mergeMap((event) => from(Promise.resolve(handler.handle(event)))))
-      .subscribe({
-        error: (error) => {
-          this.logger.error(
-            `"${handler.constructor.name}" has thrown an unhandled exception.`,
-            error,
-          );
-        },
-      });
+      .pipe(
+        mergeMap((event) =>
+          defer(() => Promise.resolve(handler.handle(event))).pipe(
+            // catchError((error) => {
+            //   const unhandledError = this.mapToUnhandledErrorInfo(event, error);
+            //   this.exceptionBus.publish(unhandledError);
+            //   this.logger.error(
+            //     `"${handler.constructor.name}" has thrown an unhandled exception.`,
+            //     error,
+            //   );
+            //   return of();
+            // }),
+          ),
+        ),
+      )
+      .subscribe();
     this.subscriptions.push(subscription);
   }
 
@@ -57,31 +64,35 @@ export class AbstractEventBus<
     const subscription = stream$
       .pipe(
         filter((e) => !!e),
-        mergeMap((command) => from(this.cmdBus.execute(command))),
-        catchError(err => {
-          console.warn('es catchError', err);
-          return throwError(() => err);
-        })
+        mergeMap((command) =>
+          defer(() => this.cmdBus.execute(command)).pipe(
+            // catchError((error) => {
+            //   const unhandledError = this.mapToUnhandledErrorInfo(
+            //     command,
+            //     error,
+            //   );
+            //   this.exceptionBus.publish(unhandledError);
+            //   this.logger.error(
+            //     `Command handler which execution was triggered by Saga has thrown an unhandled exception.`,
+            //     error,
+            //   );
+            //   return of();
+            // }),
+          ),
+        ),
       )
-      .subscribe({
-        error: (error) => {
-          this.logger.error(
-            `Command handler which execution was triggered by Saga has thrown an unhandled exception.`,
-            error,
-          );
-        },
-      });
+      .subscribe();
 
     this.subscriptions.push(subscription);
   }
 
-  // private mapToUnhandledErrorInfo(
-  //   eventOrCommand: IEvent | ICommand,
-  //   exception: unknown,
-  // ): UnhandledExceptionInfo {
-  //   return {
-  //     cause: eventOrCommand,
-  //     exception,
-  //   };
-  // }
+  private mapToUnhandledErrorInfo(
+    eventOrCommand: IEvent | ICommand,
+    exception: unknown,
+  ): UnhandledExceptionInfo {
+    return {
+      cause: eventOrCommand,
+      exception,
+    };
+  }
 }
