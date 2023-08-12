@@ -20,7 +20,7 @@ class AbstractEventBus extends cqrs_1.EventBus {
             throw new cqrs_1.InvalidSagaException();
         }
         const subscription = stream$
-            .pipe((0, rxjs_1.filter)((e) => !!e), (0, rxjs_1.mergeMap)((command) => (0, rxjs_1.defer)(() => this.cmdBus.execute(command)).pipe()))
+            .pipe((0, rxjs_1.filter)((e) => !!e), (0, rxjs_1.mergeMap)((command) => (0, rxjs_1.from)(this.cmdBus.execute(command))))
             .subscribe();
         this.subscriptions.push(subscription);
     }
