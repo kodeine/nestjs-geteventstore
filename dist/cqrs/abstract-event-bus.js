@@ -15,7 +15,11 @@ class AbstractEventBus extends cqrs_1.EventBus {
         const stream$ = id ? this.ofEventId(id) : this.subject$;
         const subscription = stream$
             .pipe((0, rxjs_1.mergeMap)((event) => (0, rxjs_1.from)(Promise.resolve(handler.handle(event)))))
-            .subscribe();
+            .subscribe({
+            error: (error) => {
+                this.logger.error(`"${handler.constructor.name}" has thrown an unhandled exception.`, error);
+            },
+        });
         this.subscriptions.push(subscription);
     }
     registerSaga(saga) {
@@ -28,7 +32,11 @@ class AbstractEventBus extends cqrs_1.EventBus {
         }
         const subscription = stream$
             .pipe((0, rxjs_1.filter)((e) => !!e), (0, rxjs_1.mergeMap)((command) => (0, rxjs_1.from)(this.cmdBus.execute(command))))
-            .subscribe();
+            .subscribe({
+            error: (error) => {
+                this.logger.error(`Command handler which execution was triggered by Saga has thrown an unhandled exception.`, error);
+            },
+        });
         this.subscriptions.push(subscription);
     }
 }
