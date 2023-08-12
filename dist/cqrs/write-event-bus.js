@@ -20,13 +20,13 @@ const constants_1 = require("../constants");
 const core_1 = require("@nestjs/core");
 const event_bus_prepublish_service_1 = require("./event-bus-prepublish.service");
 const invalid_event_exception_1 = require("../exceptions/invalid-event.exception");
-let WriteEventBus = class WriteEventBus extends cqrs_1.EventBus {
+const abstract_event_bus_1 = require("./abstract-event-bus");
+let WriteEventBus = class WriteEventBus extends abstract_event_bus_1.AbstractEventBus {
     constructor(eventstore, config, prepublish, commandBus, moduleRef, unhandledExceptionBus) {
         super(commandBus, moduleRef, unhandledExceptionBus);
         this.eventstore = eventstore;
         this.config = config;
         this.prepublish = prepublish;
-        this.logger = new common_1.Logger(this.constructor.name);
         this.logger.debug('Registering Write EventBus for EventStore...');
         this.publisher = new event_store_1.EventStorePublisher(this.eventstore, this.config);
     }

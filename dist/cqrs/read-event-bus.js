@@ -20,12 +20,12 @@ const common_2 = require("@nestjs/common");
 const constants_1 = require("../constants");
 const core_1 = require("@nestjs/core");
 const event_bus_prepublish_service_1 = require("./event-bus-prepublish.service");
-let ReadEventBus = class ReadEventBus extends cqrs_1.EventBus {
+const abstract_event_bus_1 = require("./abstract-event-bus");
+let ReadEventBus = class ReadEventBus extends abstract_event_bus_1.AbstractEventBus {
     constructor(config, prepublish, commandBus, moduleRef, unhandledExceptionBus) {
         super(commandBus, moduleRef, unhandledExceptionBus);
         this.config = config;
         this.prepublish = prepublish;
-        this.logger = new common_1.Logger(this.constructor.name);
         this.logger.debug('Registering Read EventBus for EventStore...');
     }
     async publish(event) {
