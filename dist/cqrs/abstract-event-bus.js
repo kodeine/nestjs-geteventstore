@@ -20,10 +20,7 @@ class AbstractEventBus extends cqrs_1.EventBus {
             throw new cqrs_1.InvalidSagaException();
         }
         const subscription = stream$
-            .pipe((0, rxjs_1.filter)((e) => !!e), (0, rxjs_1.mergeMap)((command) => (0, rxjs_1.defer)(() => this.cmdBus.execute(command)).pipe((0, rxjs_1.catchError)((error) => {
-            this.logger.error(`Command handler which execution was triggered by Saga has thrown an unhandled exception.`, error);
-            return (0, rxjs_1.throwError)(() => error);
-        }))))
+            .pipe((0, rxjs_1.filter)((e) => !!e), (0, rxjs_1.mergeMap)((command) => (0, rxjs_1.defer)(() => this.cmdBus.execute(command)).pipe()))
             .subscribe();
         this.subscriptions.push(subscription);
     }
