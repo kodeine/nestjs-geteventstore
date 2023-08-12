@@ -10,7 +10,7 @@ import {
     UnhandledExceptionBus,
     UnhandledExceptionInfo,
 } from '@nestjs/cqrs';
-import { Observable, filter, mergeMap, defer, catchError, of, throwError } from 'rxjs';
+import { Observable, filter, mergeMap, defer, catchError, of, throwError, from } from 'rxjs';
 
 export class AbstractEventBus<
   EventBase,
@@ -41,21 +41,22 @@ export class AbstractEventBus<
     const subscription = stream$
       .pipe(
         filter((e) => !!e),
+        // mergeMap((command) => from(this.cmdBus.execute(command))),
         mergeMap((command) =>
           defer(() => this.cmdBus.execute(command)).pipe(
-            catchError((error) => {
-              // const unhandledError = this.mapToUnhandledErrorInfo(
-              //   command,
-              //   error,
-              // );
-              // this.exceptionBus.publish(unhandledError);
-              this.logger.error(
-                `Command handler which execution was triggered by Saga has thrown an unhandled exception.`,
-                error,
-              );
-              // return of();
-              return throwError(() => error);
-            }),
+            // catchError((error) => {
+            //   // const unhandledError = this.mapToUnhandledErrorInfo(
+            //   //   command,
+            //   //   error,
+            //   // );
+            //   // this.exceptionBus.publish(unhandledError);
+            //   this.logger.error(
+            //     `Command handler which execution was triggered by Saga has thrown an unhandled exception.`,
+            //     error,
+            //   );
+            //   // return of();
+            //   return throwError(() => error);
+            // }),
           ),
         ),
       )
