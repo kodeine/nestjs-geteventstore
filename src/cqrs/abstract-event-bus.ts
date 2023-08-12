@@ -66,18 +66,19 @@ export class AbstractEventBus<
         filter((e) => !!e),
         mergeMap((command) =>
           defer(() => this.cmdBus.execute(command)).pipe(
-            // catchError((error) => {
-            //   const unhandledError = this.mapToUnhandledErrorInfo(
-            //     command,
-            //     error,
-            //   );
-            //   this.exceptionBus.publish(unhandledError);
-            //   this.logger.error(
-            //     `Command handler which execution was triggered by Saga has thrown an unhandled exception.`,
-            //     error,
-            //   );
-            //   return of();
-            // }),
+            catchError((error) => {
+              const unhandledError = this.mapToUnhandledErrorInfo(
+                command,
+                error,
+              );
+              this.exceptionBus.publish(unhandledError);
+              this.logger.error(
+                `Command handler which execution was triggered by Saga has thrown an unhandled exception.`,
+                error,
+              );
+              // return of();
+              return throwError(() => error);
+            }),
           ),
         ),
       )
@@ -86,13 +87,13 @@ export class AbstractEventBus<
     this.subscriptions.push(subscription);
   }
 
-  // private mapToUnhandledErrorInfo(
-  //   eventOrCommand: IEvent | ICommand,
-  //   exception: unknown,
-  // ): UnhandledExceptionInfo {
-  //   return {
-  //     cause: eventOrCommand,
-  //     exception,
-  //   };
-  // }
+  private mapToUnhandledErrorInfo(
+    eventOrCommand: IEvent | ICommand,
+    exception: unknown,
+  ): UnhandledExceptionInfo {
+    return {
+      cause: eventOrCommand,
+      exception,
+    };
+  }
 }
