@@ -58,6 +58,10 @@ export class AbstractEventBus<
       .pipe(
         filter((e) => !!e),
         mergeMap((command) => from(this.cmdBus.execute(command))),
+        catchError(err => {
+          console.warn('es catchError', err);
+          return throwError(() => err);
+        })
       )
       .subscribe({
         error: (error) => {
