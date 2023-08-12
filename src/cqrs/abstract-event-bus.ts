@@ -30,7 +30,7 @@ export class AbstractEventBus<
     this.cmdBus = commandBus;
   }
 
-  protected bind(handler: IEventHandler<EventBase>, id: string) {
+  bind(handler: IEventHandler<EventBase>, id: string) {
     const stream$ = id ? this.ofEventId(id) : this.subject$;
     const subscription = stream$
       .pipe(
