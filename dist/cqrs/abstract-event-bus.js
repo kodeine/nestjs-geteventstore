@@ -11,6 +11,13 @@ class AbstractEventBus extends cqrs_1.EventBus {
         this.exceptionBus = unhandledExceptionBus;
         this.cmdBus = commandBus;
     }
+    bind(handler, id) {
+        const stream$ = id ? this.ofEventId(id) : this.subject$;
+        const subscription = stream$
+            .pipe((0, rxjs_1.mergeMap)((event) => (0, rxjs_1.from)(Promise.resolve(handler.handle(event)))))
+            .subscribe();
+        this.subscriptions.push(subscription);
+    }
     registerSaga(saga) {
         if (typeof saga !== 'function') {
             throw new cqrs_1.InvalidSagaException();

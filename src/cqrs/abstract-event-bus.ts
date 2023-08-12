@@ -5,6 +5,7 @@ import {
     EventBus,
     ICommand,
     IEvent,
+    IEventHandler,
     ISaga,
     InvalidSagaException,
     UnhandledExceptionBus,
@@ -27,6 +28,29 @@ export class AbstractEventBus<
     super(commandBus, moduleRef, unhandledExceptionBus);
     this.exceptionBus = unhandledExceptionBus;
     this.cmdBus = commandBus;
+  }
+
+  protected bind(handler: IEventHandler<EventBase>, id: string) {
+    const stream$ = id ? this.ofEventId(id) : this.subject$;
+    const subscription = stream$
+      .pipe(
+        mergeMap((event) => from(Promise.resolve(handler.handle(event))))
+        // mergeMap((event) =>
+        //   defer(() => Promise.resolve(handler.handle(event))).pipe(
+        //     catchError((error) => {
+        //       const unhandledError = this.mapToUnhandledErrorInfo(event, error);
+        //       this.unhandledExceptionBus.publish(unhandledError);
+        //       this._logger.error(
+        //         `"${handler.constructor.name}" has thrown an unhandled exception.`,
+        //         error,
+        //       );
+        //       return of();
+        //     }),
+        //   ),
+        // ),
+      )
+      .subscribe();
+    this.subscriptions.push(subscription);
   }
 
   protected registerSaga(saga: ISaga<EventBase>) {
