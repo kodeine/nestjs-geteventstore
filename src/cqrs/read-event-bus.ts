@@ -10,12 +10,13 @@ import { Inject } from '@nestjs/common';
 import { READ_EVENT_BUS_CONFIG } from '../constants';
 import { ModuleRef } from '@nestjs/core';
 import { EventBusPrepublishService } from './event-bus-prepublish.service';
+import { AbstractEventBus } from './abstract-event-bus';
 
 @Injectable()
 export class ReadEventBus<
   EventBase extends IReadEvent = IReadEvent
-> extends Parent<EventBase> {
-  private logger = new Logger(this.constructor.name);
+> extends AbstractEventBus<EventBase> {
+
   constructor(
     @Inject(READ_EVENT_BUS_CONFIG)
     private readonly config: ReadEventBusConfigType<EventBase>,

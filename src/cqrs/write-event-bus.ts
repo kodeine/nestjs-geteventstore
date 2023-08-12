@@ -10,14 +10,15 @@ import { WRITE_EVENT_BUS_CONFIG } from '../constants';
 import { ModuleRef } from '@nestjs/core';
 import { EventBusPrepublishService } from './event-bus-prepublish.service';
 import { InvalidEventException } from '../exceptions/invalid-event.exception';
+import { AbstractEventBus } from './abstract-event-bus';
 
 // add next, pass onError
 
 @Injectable()
 export class WriteEventBus<
   EventBase extends IWriteEvent = IWriteEvent
-> extends Parent<EventBase> {
-  private logger = new Logger(this.constructor.name);
+> extends AbstractEventBus<EventBase> {
+
   constructor(
     private readonly eventstore: EventStore,
     @Inject(WRITE_EVENT_BUS_CONFIG)
